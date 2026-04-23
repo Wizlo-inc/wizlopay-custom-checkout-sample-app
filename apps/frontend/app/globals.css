@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-gray-900 antialiased;
+  }
+}
+
+@layer components {
+  /* Outer wrapper — owns the border and focus ring */
+  .secure-field-wrap {
+    @apply block w-full rounded-xl border border-gray-200 bg-white shadow-sm transition-all overflow-hidden;
+    height: 48px;
+  }
+
+  .secure-field-wrap:focus-within {
+    @apply border-violet-500 ring-2 ring-violet-100 outline-none;
+  }
+
+  /* Host element the SDK mounts into — no border of its own */
+  .secure-field-host {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent;
+  }
+
+  .secure-field-host iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: none !important;
+  }
+
+  .apple-pay-button {
+    -webkit-appearance: -apple-pay-button;
+    -apple-pay-button-type: pay;
+    -apple-pay-button-style: black;
+    display: block;
+    width: 100%;
+    height: 52px;
+    cursor: pointer;
+    border-radius: 14px;
+  }
+}
