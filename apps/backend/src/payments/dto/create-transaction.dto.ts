@@ -21,4 +21,16 @@ export class CreateTransactionDto {
   @IsString()
   @IsOptional()
   redirectUrl?: string;
+
+  @IsString()
+  @IsOptional()
+  buyerId?: string;
+
+  @IsString()
+  @IsOptional()
+  intent?: string;
+
+  @IsString()
+  @IsOptional()
+  paymentServiceId?: string;
 }

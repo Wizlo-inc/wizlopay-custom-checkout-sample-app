@@ -47,7 +47,8 @@ export class JwtService implements OnModuleInit {
   async generateEmbedToken(params: {
     amount: number;
     currency: string;
-    buyerExternalIdentifier: string;
+    buyerId?: string;
+    buyerExternalIdentifier?: string;
     checkoutSessionId?: string;
   }): Promise<string> {
     return getEmbedToken({
@@ -55,7 +56,9 @@ export class JwtService implements OnModuleInit {
       embedParams: {
         amount: params.amount,
         currency: params.currency,
-        buyerExternalIdentifier: params.buyerExternalIdentifier,
+        ...(params.buyerId
+          ? { buyerId: params.buyerId }
+          : { buyerExternalIdentifier: params.buyerExternalIdentifier }),
       },
       checkoutSessionId: params.checkoutSessionId,
     });

@@ -16,6 +16,7 @@ interface Props {
   country: string;
   token: string;
   checkoutSessionId: string;
+  buyerId?: string | null;
   cartItems?: { name: string; quantity: number; unitAmount: number }[];
 }
 
@@ -48,7 +49,7 @@ const BNPL_CONTENT: Record<string, {
   },
 };
 
-export function BNPLTab({ methods, amount, currency, country, token, checkoutSessionId, cartItems }: Props) {
+export function BNPLTab({ methods, amount, currency, country, token, checkoutSessionId, buyerId, cartItems }: Props) {
   const [expanded, setExpanded] = useState<string | null>(null);
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -67,6 +68,7 @@ export function BNPLTab({ methods, amount, currency, country, token, checkoutSes
           currency,
           country,
           checkoutSessionId,
+          ...(buyerId && { buyerId }),
           redirectUrl: `${window.location.origin}/checkout/callback`,
           cartItems: cartItems ?? [],
         }),

@@ -12,7 +12,7 @@ interface Props {
 }
 
 export function ApplePayButton({ token, amount, currency, country, onSuccess, onError }: Props) {
-  const [available, setAvailable] = useState(false);
+  const [nativeAvailable, setNativeAvailable] = useState(false);
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -22,13 +22,15 @@ export function ApplePayButton({ token, amount, currency, country, onSuccess, on
     script.onload = () => {
       const canPay = typeof (window as any).ApplePaySession !== 'undefined' &&
         (window as any).ApplePaySession.canMakePayments?.();
-      setAvailable(Boolean(canPay));
+      setNativeAvailable(Boolean(canPay));
     };
     document.head.appendChild(script);
     return () => { document.head.removeChild(script); };
   }, []);
 
   async function handleClick() {
+    if (!nativeAvailable) return;
+
     const ApplePaySession = (window as any).ApplePaySession;
     const amountStr = (amount / 100).toFixed(2);
 
@@ -80,13 +82,18 @@ export function ApplePayButton({ token, amount, currency, country, onSuccess, on
     session.begin();
   }
 
-  if (!available) return null;
-
   return (
     <button
       onClick={handleClick}
+      disabled={!nativeAvailable}
       aria-label="Pay with Apple Pay"
-      className="apple-pay-button"
-    />
+      className="w-full h-12 rounded-xl bg-black hover:bg-gray-900 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+    >
+      {/* Apple logo */}
+      <svg className="h-5 w-auto" viewBox="0 0 24 24" fill="white">
+        <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.7 9.05 7.4c1.32.07 2.22.74 2.98.8 1.12-.23 2.2-.93 3.39-.84 1.44.12 2.53.72 3.22 1.83-2.96 1.77-2.24 5.65.26 6.72-.54 1.5-1.27 2.96-1.85 4.37zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" />
+      </svg>
+      <span className="text-white text-sm font-semibold">Pay</span>
+    </button>
   );
 }

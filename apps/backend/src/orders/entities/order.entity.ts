@@ -41,6 +41,13 @@ export class Order {
   @Column({ nullable: true })
   paymentMethod: string;
 
+  // For payments processed outside of gr4vy (e.g. Stripe Link)
+  @Column({ nullable: true })
+  externalTransactionId: string;
+
+  @Column({ nullable: true })
+  externalPsp: string;
+
   @CreateDateColumn()
   createdAt: Date;
 

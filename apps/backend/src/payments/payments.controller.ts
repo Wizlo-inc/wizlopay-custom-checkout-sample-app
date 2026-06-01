@@ -6,10 +6,12 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
+import { StripeCheckoutService } from './stripe.checkout.service';
 import { CreateTokenDto } from './dto/create-token.dto';
 import { PaymentOptionsDto } from './dto/payment-options.dto';
 import { CreateBnplTransactionDto } from './dto/create-bnpl-transaction.dto';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
+import { FindOrCreateBuyerDto } from './dto/find-or-create-buyer.dto';
 
 // Simple user extraction — replace with your real auth guard in production
 function extractUserId(authHeader?: string): string {
@@ -21,7 +23,18 @@ function extractUserId(authHeader?: string): string {
 
 @Controller('checkout')
 export class PaymentsController {
-  constructor(private readonly paymentsService: PaymentsService) {}
+  constructor(
+    private readonly paymentsService: PaymentsService,
+    private readonly stripeCheckoutService: StripeCheckoutService,
+  ) {}
+
+  @Post('buyer')
+  async findOrCreateBuyer(@Body() body: FindOrCreateBuyerDto) {
+    return this.paymentsService.findOrCreateBuyer({
+      email: body.email,
+      displayName: body.displayName,
+    });
+  }
 
   @Post('token')
   async getToken(
@@ -33,6 +46,7 @@ export class PaymentsController {
       amount: body.amount,
       currency: body.currency,
       userId,
+      buyerId: body.buyerId,
     });
   }
 
@@ -54,13 +68,52 @@ export class PaymentsController {
     return this.paymentsService.getGooglePaySession(bodyDomain);
   }
 
+  @Post('c2p-session')
+  async clickToPaySession(@Body() body: { checkoutSessionId: string }) {
+    if (!body.checkoutSessionId) throw new BadRequestException('checkoutSessionId required');
+    return this.paymentsService.getClickToPaySession(body.checkoutSessionId);
+  }
+
   @Post('transaction')
   async createTransaction(
     @Body() body: CreateTransactionDto,
     @Headers('authorization') auth?: string,
   ) {
     const userId = extractUserId(auth);
-    return this.paymentsService.createTransaction({ ...body, userId });
+    return this.paymentsService.createTransaction({ ...body, userId, buyerId: body.buyerId });
+  }
+
+  @Post('record-external')
+  async recordExternal(
+    @Body() body: {
+      externalTransactionId: string;
+      externalPsp: string;
+      amount: number;
+      currency: string;
+      paymentMethod: string;
+      buyerId?: string;
+      status?: string;
+    },
+    @Headers('authorization') auth?: string,
+  ) {
+    const userId = extractUserId(auth);
+    return this.paymentsService.recordExternalTransaction({ ...body, userId });
+  }
+
+  @Post('stripe-intent')
+  async stripeIntent(
+    @Body() body: { amount: number; currency: string; customerEmail?: string },
+  ) {
+    return this.stripeCheckoutService.createPaymentIntent({
+      amount: body.amount,
+      currency: body.currency,
+      customerEmail: body.customerEmail,
+    });
+  }
+
+  @Post('plaid-session')
+  async plaidSession() {
+    return this.paymentsService.getPlaidLinkToken();
   }
 
   @Post('bnpl')
@@ -69,6 +122,6 @@ export class PaymentsController {
     @Headers('authorization') auth?: string,
   ) {
     const userId = extractUserId(auth);
-    return this.paymentsService.createBnplTransaction({ ...body, userId });
+    return this.paymentsService.createBnplTransaction({ ...body, userId, buyerId: body.buyerId });
   }
 }

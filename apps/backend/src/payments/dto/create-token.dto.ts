@@ -11,4 +11,8 @@ export class CreateTokenDto {
   @IsString()
   @IsOptional()
   userId?: string;
+
+  @IsString()
+  @IsOptional()
+  buyerId?: string;
 }

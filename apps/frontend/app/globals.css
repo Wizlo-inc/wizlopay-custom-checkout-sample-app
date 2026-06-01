@@ -4,22 +4,97 @@
 
 @layer base {
   body {
-    @apply bg-slate-50 text-gray-900 antialiased;
+    @apply bg-[#F3F4F6] text-gray-900 antialiased;
   }
 }
 
 @layer components {
-  /* Outer wrapper — owns the border and focus ring */
+  /* ── Grouped Stripe-style card field container ── */
+  .sf-card-group {
+    @apply w-full rounded-xl border border-gray-300 bg-white overflow-hidden transition-all duration-150;
+  }
+  .sf-card-group:focus-within {
+    @apply border-[#6938EF];
+    box-shadow: 0 0 0 3px rgba(105, 56, 239, 0.12);
+  }
+
+  /* Each row inside the group */
+  .sf-card-row {
+    @apply flex;
+  }
+
+  /* Each individual field cell */
+  .sf-card-cell {
+    @apply flex-1;
+    height: 52px;
+  }
+  .sf-card-cell + .sf-card-cell {
+    @apply border-l border-gray-200;
+  }
+  .sf-card-group .sf-card-row + .sf-card-row {
+    @apply border-t border-gray-200;
+  }
+
+  /* Card number cell: auto height to accommodate scheme icons injected below the iframe */
+  .sf-card-cell--number {
+    height: auto !important;
+    min-height: 52px;
+  }
+
+  /* For the card number host specifically, let height follow content */
+  .sf-card-cell--number .sf-host {
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* The card number iframe itself — fixed input height */
+  .sf-card-cell--number .sf-host iframe {
+    height: 52px !important;
+    min-height: 52px;
+  }
+
+  /* gr4vy-injected scheme icon container (sibling of iframe inside .sf-host) */
+  .sf-card-cell--number .sf-host > :not(iframe) {
+    display: flex !important;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 4px 12px 10px;
+  }
+
+  /* The SDK-mounted host div — strip gr4vy borders, keep their sizing */
+  .sf-host {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    overflow: hidden !important;
+  }
+  .sf-host iframe {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    border: none !important;
+    background: transparent !important;
+  }
+  /* Suppress gr4vy-injected extras on expiry and CVV hosts only —
+     those fields don't inject useful DOM, only card number does (scheme icons) */
+  .sf-card-cell:not(.sf-card-cell--number) .sf-host > :not(iframe) {
+    display: none !important;
+  }
+
+  /* Legacy wrappers (keep for ClickToPay screen if used) */
   .secure-field-wrap {
     @apply block w-full rounded-xl border border-gray-200 bg-white shadow-sm transition-all overflow-hidden;
     height: 48px;
   }
-
   .secure-field-wrap:focus-within {
-    @apply border-violet-500 ring-2 ring-violet-100 outline-none;
+    @apply border-[#6938EF];
+    box-shadow: 0 0 0 3px rgba(105, 56, 239, 0.12);
   }
-
-  /* Host element the SDK mounts into — no border of its own */
   .secure-field-host {
     display: block;
     width: 100%;
@@ -29,22 +104,10 @@
     box-shadow: none !important;
     background: transparent;
   }
-
   .secure-field-host iframe {
     display: block;
     width: 100%;
     height: 100%;
     border: none !important;
-  }
-
-  .apple-pay-button {
-    -webkit-appearance: -apple-pay-button;
-    -apple-pay-button-type: pay;
-    -apple-pay-button-style: black;
-    display: block;
-    width: 100%;
-    height: 52px;
-    cursor: pointer;
-    border-radius: 14px;
   }
 }

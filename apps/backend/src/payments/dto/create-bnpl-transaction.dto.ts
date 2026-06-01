@@ -13,6 +13,11 @@ class CartItemDto {
 }
 
 export class CreateBnplTransactionDto {
+  @IsString()
+  @IsOptional()
+  buyerId?: string;
+
+
   @IsEnum(['klarna', 'affirm'])
   method: 'klarna' | 'affirm';
 

@@ -100,7 +100,7 @@ function StatusCard({
   }[icon];
 
   return (
-    <div className="w-full max-w-sm bg-white rounded-3xl border border-gray-100 shadow-sm p-8 text-center">
+    <div className="w-full max-w-sm bg-white rounded-xl border border-gray-200 p-8 text-center">
       <div className={`w-16 h-16 ${config.bg} ring-8 ${config.ring} rounded-full flex items-center justify-center mx-auto mb-5`}>
         {config.icon}
       </div>
@@ -110,7 +110,7 @@ function StatusCard({
       {action && (
         <button
           onClick={action.onClick}
-          className="mt-6 w-full bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-6 py-3 rounded-xl text-sm font-semibold hover:from-violet-700 hover:to-indigo-700 transition-all shadow-sm"
+          className="mt-6 w-full bg-[#6938EF] hover:bg-[#5526D9] text-white px-6 py-3 rounded-lg text-sm font-semibold transition-colors"
         >
           {action.label}
         </button>
@@ -121,7 +121,7 @@ function StatusCard({
 
 export default function CallbackPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-100 via-white to-violet-50 flex items-center justify-center px-4">
+    <main className="min-h-screen bg-[#F7F8FA] flex items-center justify-center px-4">
       <Suspense fallback={
         <div className="w-16 h-16 rounded-full bg-gray-100 animate-pulse mx-auto" />
       }>

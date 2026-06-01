@@ -6,31 +6,26 @@ export default function CheckoutPage() {
   const country = 'US';
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-100 via-white to-violet-50 flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-sm">
+    <main className="min-h-screen bg-[#F3F4F6] flex items-start justify-center px-4 py-14">
+      <div className="w-full max-w-md">
 
-        {/* Order summary */}
-        <div className="mb-5 bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-center gap-4">
-          <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center flex-shrink-0">
-            <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+        {/* Merchant header */}
+        <div className="flex flex-col items-center mb-6">
+          <div className="w-10 h-10 rounded-xl bg-[#6938EF] flex items-center justify-center mb-3">
+            <svg width="18" height="14" viewBox="0 0 28 20" fill="none">
+              <path d="M0 0h4.8l3.6 12L12 0h4l3.6 12L23.2 0H28l-6 20h-4.4L14 8l-3.6 12H6L0 0Z" fill="white"/>
             </svg>
           </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate">Demo Product</p>
-            <p className="text-xs text-gray-500 mt-0.5">Qty 1 · Ships in 2–3 days</p>
-          </div>
-          <div className="text-right flex-shrink-0">
-            <p className="text-lg font-bold text-gray-900">$80.00</p>
-            <p className="text-xs text-gray-400">USD</p>
-          </div>
+          <p className="text-sm font-semibold text-gray-900">Demo Store</p>
+          <p className="text-xs text-gray-400 mt-0.5">1 item · Demo Product</p>
         </div>
 
         <CheckoutShell amount={amount} currency={currency} country={country} />
 
-        <p className="text-center text-xs text-gray-400 mt-5">
-          By completing your purchase you agree to our{' '}
-          <span className="underline cursor-pointer">Terms of Service</span>
+        <p className="text-center text-[11px] text-gray-400 mt-4 leading-relaxed">
+          By completing this purchase you agree to our{' '}
+          <span className="underline cursor-pointer">Terms</span> &{' '}
+          <span className="underline cursor-pointer">Privacy Policy</span>.
         </p>
       </div>
     </main>
